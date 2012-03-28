@@ -1,0 +1,22 @@
+{
+  "author": "Jérémy Lal <kapouer@melix.org>",
+  "name": "notemplate-minify",
+  "description": "Minify middleware for express-notemplate view engine",
+  "keywords": ["templates", "templating", "unobtrusive", "DOM", "minify"],
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kapouer/notemplate-minify.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "dependencies": {
+    "express-notemplate": ">=0.0.5"
+  , "uglify-js": ">=1.2.6"
+  },
+  "main": "./notemplate-minify.js"
+}
