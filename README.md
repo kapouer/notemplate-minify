@@ -59,4 +59,7 @@ On top of that, the rendered html will be :
 Features
 --------
 
-The minified files are automatically updated when their sources are modified.
+The minified files are automatically updated :
+* when their sources are modified
+* when any template using them is modified
+
