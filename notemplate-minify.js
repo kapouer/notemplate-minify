@@ -34,7 +34,7 @@ function minified(templatepath, public, dst, sources) {
 	return sources.every(function(src) {
 		var src = Path.join('.', public, src);
 		if (!Path.existsSync(src)) {
-			console.err("Cannot check if missing file is minified :", src);
+			console.error("Cannot check if missing file is minified :", src);
 			return false;
 		}
 		if (fs.statSync(src).mtime.getTime() > dstTime) return false;
@@ -48,7 +48,7 @@ function minify(public, dst, sources) {
 	sources.forEach(function(src) {
 		var src = Path.join('.', public, src);
 		var buf = fs.readFileSync(src);
-		if (buf == null) return console.err("Cannot minify empty file :", src);
+		if (buf == null) return console.error("Cannot minify empty file :", src);
 		var ast = jsp.parse(buf.toString());
 		ast = pro.ast_mangle(ast);
 		ast = pro.ast_squeeze(ast);
