@@ -1,3 +1,10 @@
+Version 0.0.5
+=============
+
+* Use opts.notemplate namespace, where opts is app.set("view settings")
+* opts.notemplate.minify controls minification. True by default, and
+  false will only removes notemplate:minify attributes.
+
 Version 0.0.4
 =============
 

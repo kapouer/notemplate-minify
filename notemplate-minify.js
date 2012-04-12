@@ -14,19 +14,25 @@ module.exports = function(window, data, opts) {
 function processTags(tag, att, minfun, $, opts) {
 	var files = {};
 	$(tag+'[notemplate\\:minify!=""]').each(function() {
-		var src = $(this).attr(att);
-		var dst = $(this).attr("notemplate:minify");
-		var list = files[dst] || [];
-		list.push(src);
-		if (!files[dst]) files[dst] = list;
+		if (opts.notemplate.minify != false) {
+			var src = $(this).attr(att);
+			var dst = $(this).attr("notemplate:minify");
+			var list = files[dst] || [];
+			list.push(src);
+			if (!files[dst]) files[dst] = list;
+		} else {
+			$(this).get(0).attributes.removeNamedItem('notemplate:minify');
+		}
 	});
-	for (var dst in files) {
-		if (!minified(opts.filename, opts.public, dst, files[dst])) minfun(opts.public, dst, files[dst]);
-		var nodes = $(tag+'[notemplate\\:minify="'+dst+'"]');
-		var last = nodes.last().get(0);
-		nodes.slice(0, -1).remove();
-		last.attributes.removeNamedItem('notemplate:minify');
-		last.attributes[att].value = dst;
+	if (opts.notemplate.minify != false) {
+		for (var dst in files) {
+			if (!minified(opts.filename, opts.notemplate.public, dst, files[dst])) minfun(opts.notemplate.public, dst, files[dst]);
+			var nodes = $(tag+'[notemplate\\:minify="'+dst+'"]');
+			var last = nodes.last().get(0);
+			nodes.slice(0, -1).remove();
+			last.attributes.removeNamedItem('notemplate:minify');
+			last.attributes[att].value = dst;
+		}
 	}
 }
 
