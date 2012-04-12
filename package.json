@@ -1,9 +1,9 @@
 {
   "author": "Jérémy Lal <kapouer@melix.org>",
   "name": "notemplate-minify",
-  "description": "Minify middleware for express-notemplate view engine",
-  "keywords": ["templates", "templating", "unobtrusive", "DOM", "minify"],
-  "version": "0.0.3",
+  "description": "Minify js and css - middleware for express-notemplate view engine",
+  "keywords": ["templates", "templating", "unobtrusive", "DOM", "CSS", "minify"],
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "git://github.com/kapouer/notemplate-minify.git"
@@ -17,6 +17,7 @@
   "dependencies": {
     "express-notemplate": ">=0.0.6"
   , "uglify-js": ">=1.2.6"
+  , "clean-css": ">=0.3.2"
   },
   "main": "./notemplate-minify.js"
 }

@@ -1,28 +1,34 @@
 var Path = require('path');
 var ugly = require("uglify-js");
+var clean = require("clean-css");
 var fs = require('fs');
 var jsp = ugly.parser;
 var pro = ugly.uglify;
 
 module.exports = function(window, data, opts) {
-	var files = {};
 	var $ = window.$;
-	$('script[notemplate\\:minify!=""]').each(function() {
-		var src = $(this).attr('src');
+	processTags('script', 'src', minifyJS, $, opts);
+	processTags('link', 'href', minifyCSS, $, opts);
+};
+
+function processTags(tag, att, minfun, $, opts) {
+	var files = {};
+	$(tag+'[notemplate\\:minify!=""]').each(function() {
+		var src = $(this).attr(att);
 		var dst = $(this).attr("notemplate:minify");
 		var list = files[dst] || [];
 		list.push(src);
 		if (!files[dst]) files[dst] = list;
 	});
 	for (var dst in files) {
-		if (!minified(opts.filename, opts.public, dst, files[dst])) minify(opts.public, dst, files[dst]);
-		var nodes = $('script[notemplate\\:minify="'+dst+'"]');
+		if (!minified(opts.filename, opts.public, dst, files[dst])) minfun(opts.public, dst, files[dst]);
+		var nodes = $(tag+'[notemplate\\:minify="'+dst+'"]');
 		var last = nodes.last().get(0);
 		nodes.slice(0, -1).remove();
 		last.attributes.removeNamedItem('notemplate:minify');
-		last.attributes.src.value = dst;
+		last.attributes[att].value = dst;
 	}
-};
+}
 
 function minified(templatepath, public, dst, sources) {
 	// return true if dst exists has been modified after all files
@@ -42,7 +48,7 @@ function minified(templatepath, public, dst, sources) {
 	});
 }
 
-function minify(public, dst, sources) {
+function minifyJS(public, dst, sources) {
 	var dst = Path.join('.', public, dst);
 	var fd = fs.openSync(dst, 'w');
 	sources.forEach(function(src) {
@@ -55,4 +61,24 @@ function minify(public, dst, sources) {
 		fs.writeSync(fd, pro.gen_code(ast) + ";\n");
 	});
 	fs.closeSync(fd);
+}
+
+function minifyCSS(public, dst, sources) {
+	var dst = Path.join('.', public, dst);
+	var fd = fs.openSync(dst, 'w');
+	sources.forEach(function(src) {
+		var src = Path.join('.', public, src);
+		fs.writeSync(fd, clean.process(cssImportRule(src)) + "\n");
+	});
+	fs.closeSync(fd);
+}
+
+function cssImportRule(path) {
+	var text = fs.readFileSync(path, 'utf8');
+	if (text == null) return "";
+
+	return text.replace(/^\s*@import\s+(?:url\()?["']([^"']*)["'](?:\))?;?/gm, function(match, p1, offset, s) {
+		var newpath = Path.join(Path.dirname(path), p1);
+		return cssImportRule(newpath);
+	});
 }
