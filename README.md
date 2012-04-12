@@ -74,6 +74,9 @@ The minified files are automatically updated :
 KNOWN BUGS
 ----------
 
-If the files are symlinks, modifying them won't be noticed.
-Workaround :
- either touch the directory containing them, or the template file.
+B minified file not up-to-date.
+W	When deploying or pulling from git, `touch views/*`
+
+B if a stylesheet and its images is in a subdir of the minified css, the
+	paths will be wrong.
+W	Add a symlink to the subdir assets in the dir containing the minified file.
