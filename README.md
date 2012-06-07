@@ -20,21 +20,21 @@ On production one wants to minify and reduce the number of js files to be loaded
 notemplate-minify provides a very simple yet configurable way to do that.
 
 
-Setup
------
+Express 3 Setup
+---------------
 
-	// ...
 	var notemplate = require('express-notemplate');
-	// ...
-	app.configure(function(){
-		app.set('views', __dirname + '/views');
-		app.register('.html', notemplate);
-		app.set('view engine', 'html');
-		app.set('view options', {
-			layout: false
-		});
-		notemplate.on('render', require('notemplate-minify'));
-	});
+	app.set('minify', app.settings.env != "development");
+	app.set('statics', process.cwd() + '/public');
+	app.set('views', process.cwd() + '/views');
+	app.engine('html', notemplate.__express);
+	app.set('view engine', 'html');
+	app.use(express.static(app.get('statics')));
+	// this will check if minification is needed only once, not each time the view is rendered
+	notemplate.on('ready', require('notemplate-minify'));
+
+	// this will check if minification is needed every time the view is rendered - avoid it even if it's not an intensive task
+	notemplate.on('render', require('notemplate-minify'));
 
 
 Usage

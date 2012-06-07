@@ -1,3 +1,12 @@
+Version 0.1.2
+=============
+
+* Express 3 - express-notemplate 0.1.x compatible version. Breaks otherwise.
+* Uses app.settings.minify (boolean, default true) and app.settings.statics,
+  default process.cwd() + '/public'
+* Bump versions of dependencies (uglify-js and clean-css)
+* Can be run at notemplate.on('ready') which is more efficient.
+
 Version 0.0.5
 =============
 

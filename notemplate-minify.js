@@ -5,16 +5,21 @@ var fs = require('fs');
 var jsp = ugly.parser;
 var pro = ugly.uglify;
 
-module.exports = function(window, data, opts) {
-	var $ = window.$;
-	processTags('script', 'src', minifyJS, $, opts);
-	processTags('link', 'href', minifyCSS, $, opts);
+module.exports = function(view, opts) {
+	var $ = view.window.$;
+	var settings = {
+		minify: opts.settings.minify == null || opts.settings.minify,
+		statics: opts.settings.statics || process.cwd() + '/public',
+		viewmtime: view.mtime
+	}
+	processTags('script', 'src', minifyJS, $, settings);
+	processTags('link', 'href', minifyCSS, $, settings);
 };
 
-function processTags(tag, att, minfun, $, opts) {
+function processTags(tag, att, minfun, $, settings) {
 	var files = {};
 	$(tag+'[notemplate\\:minify!=""]').each(function() {
-		if (opts.notemplate.minify != false) {
+		if (settings.minify) {
 			var src = $(this).attr(att);
 			var dst = $(this).attr("notemplate:minify");
 			var list = files[dst] || [];
@@ -24,9 +29,9 @@ function processTags(tag, att, minfun, $, opts) {
 			$(this).get(0).attributes.removeNamedItem('notemplate:minify');
 		}
 	});
-	if (opts.notemplate.minify != false) {
+	if (settings.minify) {
 		for (var dst in files) {
-			if (!minified(opts.filename, opts.notemplate.public, dst, files[dst])) minfun(opts.notemplate.public, dst, files[dst]);
+			if (!minified(settings.viewmtime, settings.statics, dst, files[dst])) minfun(settings.statics, dst, files[dst]);
 			var nodes = $(tag+'[notemplate\\:minify="'+dst+'"]');
 			var last = nodes.last().get(0);
 			nodes.slice(0, -1).remove();
@@ -36,15 +41,15 @@ function processTags(tag, att, minfun, $, opts) {
 	}
 }
 
-function minified(templatepath, public, dst, sources) {
+function minified(viewmtime, public, dst, sources) {
 	// return true if dst exists has been modified after all files
-	var dst = Path.join('.', public, dst);
+	var dst = Path.join(public, dst);
 	if (!Path.existsSync(dst)) return false;
 	var dstTime = fs.statSync(dst).mtime.getTime();
-	var tmplTime = fs.statSync(templatepath).mtime.getTime();
+	var tmplTime = viewmtime.getTime();
 	if (tmplTime > dstTime) return false;
 	return sources.every(function(src) {
-		var src = Path.join('.', public, src);
+		var src = Path.join(public, src);
 		if (!Path.existsSync(src)) {
 			console.error("Cannot check if missing file is minified :", src);
 			return false;
@@ -55,10 +60,10 @@ function minified(templatepath, public, dst, sources) {
 }
 
 function minifyJS(public, dst, sources) {
-	var dst = Path.join('.', public, dst);
+	var dst = Path.join(public, dst);
 	var fd = fs.openSync(dst, 'w');
 	sources.forEach(function(src) {
-		var src = Path.join('.', public, src);
+		var src = Path.join(public, src);
 		var buf = fs.readFileSync(src);
 		if (buf == null) return console.error("Cannot minify empty file :", src);
 		var ast = jsp.parse(buf.toString());
@@ -70,10 +75,10 @@ function minifyJS(public, dst, sources) {
 }
 
 function minifyCSS(public, dst, sources) {
-	var dst = Path.join('.', public, dst);
+	var dst = Path.join(public, dst);
 	var fd = fs.openSync(dst, 'w');
 	sources.forEach(function(src) {
-		var src = Path.join('.', public, src);
+		var src = Path.join(public, src);
 		fs.writeSync(fd, clean.process(cssImportRule(src)) + "\n");
 	});
 	fs.closeSync(fd);
