@@ -3,7 +3,7 @@
   "name": "notemplate-minify",
   "description": "Minify js and css - middleware for express-notemplate view engine",
   "keywords": ["templates", "templating", "unobtrusive", "DOM", "CSS", "minify"],
-  "version": "0.0.5",
+  "version": "0.0.6",
   "repository": {
     "type": "git",
     "url": "git://github.com/kapouer/notemplate-minify.git"
