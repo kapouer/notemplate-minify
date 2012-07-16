@@ -15,9 +15,9 @@
     }
   ],
   "dependencies": {
-    "express-notemplate": ">=0.0.10"
-  , "uglify-js": ">=1.2.6"
-  , "clean-css": ">=0.3.2"
+    "express-notemplate": "0.0.x"
+  , "uglify-js": "1.2.x"
+  , "clean-css": "0.3.x"
   },
   "main": "./notemplate-minify.js"
 }
