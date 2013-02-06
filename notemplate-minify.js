@@ -18,7 +18,7 @@ module.exports = function(view, opts) {
 
 function processTags(tag, att, minfun, $, settings) {
 	var files = {};
-	$(tag+'[notemplate\\:minify!=""]').each(function() {
+	$(tag+'[notemplate\\:minify]').each(function() {
 		if (settings.minify) {
 			var src = $(this).attr(att);
 			var dst = $(this).attr("notemplate:minify");
