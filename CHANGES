@@ -1,3 +1,8 @@
+Version 0.1.5
+=============
+
+* Simplify dependency on express-notemplate : 0.1.x
+
 Version 0.1.3
 =============
 
