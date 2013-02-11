@@ -79,17 +79,29 @@ function minifyCSS(public, dst, sources) {
 	var fd = fs.openSync(dst, 'w');
 	sources.forEach(function(src) {
 		var src = Path.join(public, src);
-		fs.writeSync(fd, clean.process(cssImportRule(src), {keepSpecialComments:0}) + "\n");
+		fs.writeSync(fd, clean.process(cssImportRule(src, dst), {keepSpecialComments:0}) + "\n");
 	});
 	fs.closeSync(fd);
 }
 
-function cssImportRule(path) {
-	var text = fs.readFileSync(path, 'utf8');
+function fixRelativePaths(src, dst, text) {
+	var srcDir = Path.dirname(src);
+	var dstDir = Path.dirname(dst);
+	var relativePath = Path.relative(Path.dirname(dst), Path.dirname(src));
+	if (!relativePath) return text;
+	var text = text.replace(/(url\(["'])([^"']*)(["']\))/gm, function(match, p1, p2, p3, offset, s) {
+		return p1 + Path.join(relativePath, p2) + p3;
+	});
+	return text;
+}
+
+function cssImportRule(src, dst) {
+	var text = fs.readFileSync(src, 'utf8');
 	if (text == null) return "";
+	else return fixRelativePaths(src, dst, text);
 
 	return text.replace(/^\s*@import\s+(?:url\()?["']([^"']*)["'](?:\))?;?/gm, function(match, p1, offset, s) {
-		var newpath = Path.join(Path.dirname(path), p1);
-		return cssImportRule(newpath);
+		var newsrc = Path.join(Path.dirname(src), p1);
+		return cssImportRule(newsrc, dst);
 	});
 }
