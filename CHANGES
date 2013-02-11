@@ -1,3 +1,9 @@
+Version 0.1.7
+=============
+
+* Fix path in url() if including stylesheet is not in the same dir.
+
+
 Version 0.1.6
 =============
 
