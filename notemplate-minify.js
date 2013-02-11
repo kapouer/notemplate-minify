@@ -79,7 +79,7 @@ function minifyCSS(public, dst, sources) {
 	var fd = fs.openSync(dst, 'w');
 	sources.forEach(function(src) {
 		var src = Path.join(public, src);
-		fs.writeSync(fd, clean.process(cssImportRule(src)) + "\n");
+		fs.writeSync(fd, clean.process(cssImportRule(src), {keepSpecialComments:0}) + "\n");
 	});
 	fs.closeSync(fd);
 }
