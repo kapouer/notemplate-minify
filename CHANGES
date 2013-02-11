@@ -1,3 +1,9 @@
+Version 0.1.6
+=============
+
+* Bump dependency on clean-css
+* Strip all comments
+
 Version 0.1.5
 =============
 
