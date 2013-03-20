@@ -12,8 +12,8 @@ module.exports = function(view, opts) {
 		statics: opts.settings.statics || process.cwd() + '/public',
 		viewmtime: view.mtime
 	}
-	processTags('script', 'src', minifyJS, $, settings);
-	processTags('link', 'href', minifyCSS, $, settings);
+	processTags('script', 'src', concatenateJS, $, settings);
+	processTags('link', 'href', concatenateCSS, $, settings);
 };
 
 function processTags(tag, att, minfun, $, settings) {
@@ -31,7 +31,7 @@ function processTags(tag, att, minfun, $, settings) {
 	});
 	if (settings.minify) {
 		for (var dst in files) {
-			if (!minified(settings.viewmtime, settings.statics, dst, files[dst])) minfun(settings.statics, dst, files[dst]);
+			if (!minified(settings.viewmtime, settings.statics, dst, files[dst])) minfun(settings.statics, dst, files[dst], settings.minify);
 			var nodes = $(tag+'[notemplate\\:minify="'+dst+'"]');
 			var last = nodes.last().get(0);
 			nodes.slice(0, -1).remove();
@@ -59,27 +59,34 @@ function minified(viewmtime, public, dst, sources) {
 	});
 }
 
-function minifyJS(public, dst, sources) {
+function concatenateJS(public, dst, sources, minify) {
 	var dst = Path.join(public, dst);
 	var fd = fs.openSync(dst, 'w');
 	sources.forEach(function(src) {
 		var src = Path.join(public, src);
 		var buf = fs.readFileSync(src);
 		if (buf == null) return console.error("Cannot minify empty file :", src);
-		var ast = jsp.parse(buf.toString());
-		ast = pro.ast_mangle(ast);
-		ast = pro.ast_squeeze(ast);
-		fs.writeSync(fd, pro.gen_code(ast) + ";\n");
+		if (minify != "cat") {
+			var ast = jsp.parse(buf.toString());
+			ast = pro.ast_mangle(ast);
+			ast = pro.ast_squeeze(ast);
+			buf = pro.gen_code(ast);
+		}
+		fs.writeSync(fd, buf + ";\n");
 	});
 	fs.closeSync(fd);
 }
 
-function minifyCSS(public, dst, sources) {
+function concatenateCSS(public, dst, sources, minify) {
 	var dst = Path.join(public, dst);
 	var fd = fs.openSync(dst, 'w');
 	sources.forEach(function(src) {
 		var src = Path.join(public, src);
-		fs.writeSync(fd, clean.process(cssImportRule(src, dst), {keepSpecialComments:0}) + "\n");
+		var buf = cssImportRule(src, dst);
+		if (minify != "cat") {
+			buf = clean.process(buf, {keepSpecialComments:0});
+		}
+		fs.writeSync(fd, buf + "\n");
 	});
 	fs.closeSync(fd);
 }
