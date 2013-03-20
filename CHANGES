@@ -1,3 +1,11 @@
+Version 0.1.8
+=============
+
+* minify false : no concatenation no minification
+  minify "cat" : concatenation without minification
+  minify true : concatenation and minification.
+
+
 Version 0.1.7
 =============
 
