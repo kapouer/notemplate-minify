@@ -1,3 +1,9 @@
+Version 0.1.9
+=============
+
+* Fixes @import paths as well as url() paths
+
+
 Version 0.1.8
 =============
 
