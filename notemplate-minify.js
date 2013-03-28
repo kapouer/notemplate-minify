@@ -96,8 +96,11 @@ function fixRelativePaths(src, dst, text) {
 	var dstDir = Path.dirname(dst);
 	var relativePath = Path.relative(Path.dirname(dst), Path.dirname(src));
 	if (!relativePath) return text;
-	var text = text.replace(/(url\(["'])([^"']*)(["']\))/gm, function(match, p1, p2, p3, offset, s) {
-		return p1 + Path.join(relativePath, p2) + p3;
+	var text = text.replace(/(url\(["'])([^"']*)(["']\))|(@import\s+(?:url\()?["'])([^"']*)(["'])(?:\))?/gm, function(match, p1, p2, p3, p4, p5, p6, offset, s) {
+		var left = p1 || p4;
+		var inside = p2 || p5;
+		var right = p3 || p6;
+		return left + Path.join(relativePath, inside) + right;
 	});
 	return text;
 }
@@ -105,10 +108,10 @@ function fixRelativePaths(src, dst, text) {
 function cssImportRule(src, dst) {
 	var text = fs.readFileSync(src, 'utf8');
 	if (text == null) return "";
-	else return fixRelativePaths(src, dst, text);
+	text = fixRelativePaths(src, dst, text);
 
 	return text.replace(/^\s*@import\s+(?:url\()?["']([^"']*)["'](?:\))?;?/gm, function(match, p1, offset, s) {
-		var newsrc = Path.join(Path.dirname(src), p1);
+		var newsrc = Path.join(Path.dirname(dst), p1);
 		return cssImportRule(newsrc, dst);
 	});
 }
