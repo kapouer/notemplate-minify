@@ -4,6 +4,7 @@ var clean = require("clean-css");
 var fs = require('fs');
 var jsp = ugly.parser;
 var pro = ugly.uglify;
+var fexistsSync = fs.existsSync || Path.existsSync;
 
 module.exports = function(view, opts) {
 	var $ = view.window.$;
@@ -44,13 +45,13 @@ function processTags(tag, att, minfun, $, settings) {
 function minified(viewmtime, public, dst, sources) {
 	// return true if dst exists has been modified after all files
 	var dst = Path.join(public, dst);
-	if (!Path.existsSync(dst)) return false;
+	if (!fexistsSync(dst)) return false;
 	var dstTime = fs.statSync(dst).mtime.getTime();
 	var tmplTime = viewmtime.getTime();
 	if (tmplTime > dstTime) return false;
 	return sources.every(function(src) {
 		var src = Path.join(public, src);
-		if (!Path.existsSync(src)) {
+		if (!fexistsSync(src)) {
 			console.error("Cannot check if missing file is minified :", src);
 			return false;
 		}
