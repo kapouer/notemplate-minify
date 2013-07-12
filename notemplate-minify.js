@@ -27,8 +27,9 @@ function processTags(tag, att, minfun, $, settings) {
 		if (settings.minify) {
 			var src = $(this).attr(att);
 			var dst = $(this).attr("notemplate:minify");
-			var list = files[dst] || [];
-			list.push(src);
+			var list = files[dst] || {sources: [], classes: []};
+			list.sources.push(src);
+			list.classes.push($(this).attr('class'));
 			if (!files[dst]) files[dst] = list;
 		} else {
 			$(this).get(0).attributes.removeNamedItem('notemplate:minify');
@@ -47,10 +48,11 @@ function processTags(tag, att, minfun, $, settings) {
 				minfun(settings.statics, dst, lists.sources, settings.minify);
 			}
 			var nodes = $(tag+'[notemplate\\:minify="'+dst+'"]');
-			var last = nodes.last().get(0);
+			var last = nodes.last();
 			nodes.slice(0, -1).remove();
-			last.attributes.removeNamedItem('notemplate:minify');
-			last.attributes[att].value = dst;
+			last.removeAttr('notemplate:minify');
+			last.attr(att, dst);
+			last.addClass(lists.classes.join(' '));
 		}
 	}
 }

@@ -48,9 +48,9 @@ Starting from some script tags, you decide which ones are going to be merged/min
 	<link rel='stylesheet' type='text/css' notemplate:minify="stylesheets/mypage.min.css" href='stylesheets/jqueryui-timepicker.css' />
 
 	<script src="javascripts/modernizr.js"></script>
-	<script src="javascripts/jquery.js" notemplate:minify="javascripts/bundle.js"></script>
-	<script src="javascripts/moment.js" notemplate:minify="javascripts/bundle.js"></script>
-	<script src="javascripts/moment.fr.js" notemplate:minify="javascripts/bundle.js"></script>
+	<script class="bundle" src="javascripts/jquery.js" notemplate:minify="javascripts/bundle.js"></script>
+	<script class="bundle" src="javascripts/moment.js" notemplate:minify="javascripts/bundle.js"></script>
+	<script class="bundle extra" src="javascripts/moment.fr.js" notemplate:minify="javascripts/bundle.js"></script>
 	<script src="javascripts/jquery-ui.js" notemplate:minify="javascripts/jqueryui.min.js"></script>
 	<script src="javascripts/jquery-ui.fr.js" notemplate:minify="javascripts/jqueryui.min.js"></script>
 
@@ -59,7 +59,7 @@ On top of that, thanks to using express-notemplate, the rendered html is automat
 
 	<link rel='stylesheet' type='text/css' href='stylesheets/mypage.min.css' />
 	<script src="javascripts/modernizr.js"></script>
-	<script src="javascripts/bundle.js"></script>
+	<script class="bundle extra" src="javascripts/bundle.js"></script>
 	<script src="javascripts/jqueryui.min.js"></script>
 
 
