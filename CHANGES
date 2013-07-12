@@ -1,3 +1,11 @@
+Version 0.1.11
+==============
+
+* merge "class" attributes of minified link, script tags.
+  This allows one to have an invariant selector upon minification.
+* use mkdirp to create missing directories to minified file path.
+* do not try to rename paths in stylesheets url('data:xxx').
+
 Version 0.1.10
 ==============
 
