@@ -5,6 +5,10 @@ var fs = require('fs');
 var jsp = ugly.parser;
 var pro = ugly.uglify;
 var fexistsSync = fs.existsSync || Path.existsSync;
+var mkdirp;
+try {
+	mkdirp = require('mkdirp');
+} catch(e) {}
 
 module.exports = function(view, opts) {
 	var $ = view.window.$;
@@ -32,7 +36,16 @@ function processTags(tag, att, minfun, $, settings) {
 	});
 	if (settings.minify) {
 		for (var dst in files) {
-			if (!minified(settings.viewmtime, settings.statics, dst, files[dst])) minfun(settings.statics, dst, files[dst], settings.minify);
+			var lists = files[dst];
+			if (!minified(settings.viewmtime, settings.statics, dst, lists.sources)) {
+				// ensures dst dir exists
+				var dirdst = Path.dirname(Path.join(settings.statics, dst));
+				if (!fexistsSync(dirdst)) {
+					if (!mkdirp) throw new Error("No such directory: " + dirdst + "\nInstall mkdirp to automatically create one.");
+					mkdirp.sync(dirdst);
+				}
+				minfun(settings.statics, dst, lists.sources, settings.minify);
+			}
 			var nodes = $(tag+'[notemplate\\:minify="'+dst+'"]');
 			var last = nodes.last().get(0);
 			nodes.slice(0, -1).remove();
