@@ -1,3 +1,10 @@
+Version 0.1.12
+==============
+
+* keep "notemplate:*" attributes of minified tags, the last attribute
+  being the one that is kept. Useful for conditional comments support
+  that appeared in notemplate 0.1.17.
+
 Version 0.1.11
 ==============
 

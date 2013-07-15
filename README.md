@@ -46,13 +46,14 @@ Starting from some script tags, you decide which ones are going to be merged/min
 	<link rel='stylesheet' type='text/css' notemplate:minify="stylesheets/mypage.min.css" href='stylesheets/mypage.css' />
 	<link rel='stylesheet' type='text/css' notemplate:minify="stylesheets/mypage.min.css" href='stylesheets/jqueryui-theme/jquery.ui.all.css' />
 	<link rel='stylesheet' type='text/css' notemplate:minify="stylesheets/mypage.min.css" href='stylesheets/jqueryui-timepicker.css' />
+	<!--[if lte IE 8]><link rel="stylesheet" href="stylesheets/ie.css" notemplate:minify="stylesheets/ie.min.css" /> /><![endif]-->
 
 	<script src="javascripts/modernizr.js"></script>
 	<script class="bundle" src="javascripts/jquery.js" notemplate:minify="javascripts/bundle.js"></script>
 	<script class="bundle" src="javascripts/moment.js" notemplate:minify="javascripts/bundle.js"></script>
 	<script class="bundle extra" src="javascripts/moment.fr.js" notemplate:minify="javascripts/bundle.js"></script>
 	<script src="javascripts/jquery-ui.js" notemplate:minify="javascripts/jqueryui.min.js"></script>
-	<script src="javascripts/jquery-ui.fr.js" notemplate:minify="javascripts/jqueryui.min.js"></script>
+	<script src="javascripts/jquery-ui.fr.js" notemplate:minify="javascripts/jqueryui.min.js" notemplate:john="doe"></script>
 
 This will produce three new files, mypage.min.css, bundle.js and jqueryui.min.js, containing the minified and merged files.
 On top of that, thanks to using express-notemplate, the rendered html is automatically modified to be :
@@ -60,7 +61,9 @@ On top of that, thanks to using express-notemplate, the rendered html is automat
 	<link rel='stylesheet' type='text/css' href='stylesheets/mypage.min.css' />
 	<script src="javascripts/modernizr.js"></script>
 	<script class="bundle extra" src="javascripts/bundle.js"></script>
-	<script src="javascripts/jqueryui.min.js"></script>
+	<script src="javascripts/jqueryui.min.js" notemplate:john="doe"></script>
+
+As seen in this example, class attributes are saved and added, and notemplate:* attributes are kept and overwritten.
 
 
 Features
