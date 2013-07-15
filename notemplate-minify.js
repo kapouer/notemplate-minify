@@ -23,13 +23,17 @@ module.exports = function(view, opts) {
 
 function processTags(tag, att, minfun, $, settings) {
 	var files = {};
-	$(tag+'[notemplate\\:minify]').each(function() {
+	$(":root > head > " + tag + '[notemplate\\:minify]').each(function() {
 		if (settings.minify) {
 			var src = $(this).attr(att);
 			var dst = $(this).attr("notemplate:minify");
-			var list = files[dst] || {sources: [], classes: []};
+			var list = files[dst] || {sources: [], classes: [], atts: {}};
 			list.sources.push(src);
 			list.classes.push($(this).attr('class'));
+			for (var i=0, len = this.attributes.length; i < len; i++) {
+				var item = this.attributes.item(i);
+				if (item.name && item.name.indexOf('notemplate:') == 0 && item.name.indexOf('notemplate:minify') < 0) list.atts[item.name] = item.value;
+			}
 			if (!files[dst]) files[dst] = list;
 		} else {
 			$(this).get(0).attributes.removeNamedItem('notemplate:minify');
@@ -53,6 +57,9 @@ function processTags(tag, att, minfun, $, settings) {
 			last.removeAttr('notemplate:minify');
 			last.attr(att, dst);
 			last.addClass(lists.classes.join(' '));
+			for (var name in lists.atts) {
+				last.attr(name, lists.atts[name]);
+			}
 		}
 	}
 }
