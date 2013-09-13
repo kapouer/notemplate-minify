@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+var notemplate = require('express-notemplate');
+
+notemplate.on('data', require('..'));
+notemplate.on('render', require('..')); // needed for icons css
+
+var view = process.argv[2];
+
+notemplate.__express(view, {
+	settings: {
+		statics: '.',
+		href: ''
+	}
+}, function(err, html) {
+	console.log(html);
+});
