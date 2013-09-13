@@ -1,3 +1,10 @@
+Version 0.1.13
+==============
+
+* bin/notemplate-minify, when run in "public" dir, can minify a static
+  html file and its css, js.
+  `../node_modules/.bin/notemplate-minify test.dev.html > test.html`
+
 Version 0.1.12
 ==============
 
