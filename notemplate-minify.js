@@ -122,7 +122,7 @@ function fixRelativePaths(src, dst, text) {
 	var text = text.replace(/(url\(["'])([^"']*)(["']\))|(@import\s+(?:url\()?["'])([^"']*)(["'])(?:\))?/gm, function(match, p1, p2, p3, p4, p5, p6, offset, s) {
 		var left = p1 || p4;
 		var inside = p2 || p5;
-		if (!/^\s*data:/.test(inside)) inside = Path.join(relativePath, inside);
+		if (!/^\s*(data:|https?:\/\/|\/\/)/.test(inside)) inside = Path.join(relativePath, inside);
 		var right = p3 || p6;
 		return left + inside + right;
 	});
