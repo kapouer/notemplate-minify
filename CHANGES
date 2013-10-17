@@ -1,3 +1,8 @@
+Version 0.1.14
+==============
+
+* do not try to fix url() in stylesheets when they are not relative
+
 Version 0.1.13
 ==============
 
