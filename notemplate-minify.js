@@ -1,6 +1,7 @@
 var Path = require('path');
 var ugly = require("uglify-js");
 var clean = require("clean-css");
+var prefixer = require('autoprefixer');
 var fs = require('fs');
 var jsp = ugly.parser;
 var pro = ugly.uglify;
@@ -105,11 +106,12 @@ function concatenateCSS(public, dst, sources, minify) {
 	var fd = fs.openSync(dst, 'w');
 	sources.forEach(function(src) {
 		var src = Path.join(public, src);
-		var buf = cssImportRule(src, dst);
+		var str = cssImportRule(src, dst);
+		str = prefixer.process(str).css;
 		if (minify != "cat") {
-			buf = clean.process(buf, {keepSpecialComments:0});
+			str = clean.process(str, {keepSpecialComments:0});
 		}
-		fs.writeSync(fd, buf + "\n");
+		fs.writeSync(fd, str + "\n");
 	});
 	fs.closeSync(fd);
 }
