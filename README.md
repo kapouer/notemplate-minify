@@ -17,14 +17,19 @@ That way it is possible to :
 * npm update myjslib
 
 On production one wants to minify and reduce the number of js files to be loaded.
-notemplate-minify provides a very simple yet configurable way to do that.
+notemplate-minify provides a very simple yet configurable way to do that:.
 
 
 Express 3 Setup
 ---------------
 
 	var notemplate = require('express-notemplate');
+	// minify config variable accepts false, "cat", true.
+	// false doesn't do a thing
+	// "cat" autoprefixes and concatenates without minifying
+	// true autoprefixes, concatenates, and minifies.
 	app.set('minify', app.settings.env != "development");
+	// app.set('minify', false | "cat" | true);
 	app.set('statics', process.cwd() + '/public');
 	app.set('views', process.cwd() + '/views');
 	app.engine('html', notemplate.__express);
@@ -69,17 +74,17 @@ As seen in this example, class attributes are saved and added, and notemplate:* 
 Features
 --------
 
-The minified files are automatically updated :
-* when their sources are modified
-* when any template using them is modified
+Stylesheets are auto-prefixed and minified when:
+* their sources are modified
+* any template using them is modified
 
 
 KNOWN BUGS
 ----------
 
-B minified file not up-to-date.
-W	When deploying or pulling from git, `touch views/*`
+Q minified file not up-to-date.
+A	When deploying or pulling from git, `touch views/*`
 
-B if a stylesheet and its images is in a subdir of the minified css, the
+Q if a stylesheet and its images is in a subdir of the minified css, the
 	paths will be wrong.
-W	Add a symlink to the subdir assets in the dir containing the minified file.
+A	Add a symlink to the subdir assets in the dir containing the minified file.
