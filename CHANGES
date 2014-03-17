@@ -1,3 +1,8 @@
+Version 0.2.2
+=============
+
+* use clean-css 2 API (was broken too)
+
 Version 0.2.1
 =============
 
