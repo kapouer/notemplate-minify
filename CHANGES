@@ -1,3 +1,8 @@
+Version 0.2.1
+=============
+
+* use uglify-js 2 API (it might have been broken for a while...)
+
 Version 0.2.0
 =============
 
