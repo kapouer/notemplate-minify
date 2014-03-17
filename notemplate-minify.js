@@ -1,10 +1,8 @@
 var Path = require('path');
-var ugly = require("uglify-js");
+var UglifyJS = require("uglify-js");
 var clean = require("clean-css");
 var prefixer = require('autoprefixer');
 var fs = require('fs');
-var jsp = ugly.parser;
-var pro = ugly.uglify;
 var fexistsSync = fs.existsSync || Path.existsSync;
 var mkdirp;
 try {
@@ -91,10 +89,7 @@ function concatenateJS(public, dst, sources, minify) {
 		var buf = fs.readFileSync(src);
 		if (buf == null) return console.error("Cannot minify empty file :", src);
 		if (minify != "cat") {
-			var ast = jsp.parse(buf.toString());
-			ast = pro.ast_mangle(ast);
-			ast = pro.ast_squeeze(ast);
-			buf = pro.gen_code(ast);
+			buf = UglifyJS.minify(buf.toString(), {fromString: true}).code;
 		}
 		fs.writeSync(fd, buf + ";\n");
 	});
