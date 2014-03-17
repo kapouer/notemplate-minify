@@ -1,6 +1,6 @@
 var Path = require('path');
 var UglifyJS = require("uglify-js");
-var clean = require("clean-css");
+var CleanCSS = require("clean-css");
 var prefixer = require('autoprefixer');
 var fs = require('fs');
 var fexistsSync = fs.existsSync || Path.existsSync;
@@ -104,7 +104,7 @@ function concatenateCSS(public, dst, sources, minify) {
 		var str = cssImportRule(src, dst);
 		str = prefixer.process(str).css;
 		if (minify != "cat") {
-			str = clean.process(str, {keepSpecialComments:0});
+			str = new CleanCSS({keepSpecialComments:0}).minify(str);
 		}
 		fs.writeSync(fd, str + "\n");
 	});
