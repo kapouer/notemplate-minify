@@ -3,17 +3,17 @@
   "name": "notemplate-minify",
   "description": "Minify js and css - middleware for express-notemplate view engine",
   "keywords": ["template", "DOM", "CSS", "minify"],
-  "version": "0.2.2",
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/kapouer/notemplate-minify.git"
   },
   "license": "MIT",
   "dependencies": {
-    "express-notemplate": "~0.2.0"
-  , "uglify-js": "~2.4"
-  , "clean-css": "~2.0"
-  , "autoprefixer": "1.0.x"
+    "express-notemplate": "^0.3.0"
+  , "uglify-js": "^2.4"
+  , "clean-css": "^2.0"
+  , "autoprefixer": "^2.2.0"
   },
   "optionalDependencies": {
     "mkdirp": "0.3.x"
